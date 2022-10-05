@@ -1,2 +1,2 @@
 # fancyarray
-A collection of fancy array structures in C++
+Atemplated structure of arrays of elements of different types. Uses `std::tuple` and `std::vector`
