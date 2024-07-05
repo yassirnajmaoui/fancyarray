@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
-
 #include "FileCommon.hpp"
 #include "TupleCommon.hpp"
+
+#include <vector>
 
 template <typename... Types>
 class VectorOfStructs

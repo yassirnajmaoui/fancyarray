@@ -25,7 +25,7 @@ int main(int, char**)
 	sa.save("file1");
 
 	StructOfVectors<int, double, float> sb;
-	sb.read("file1"); // DOES NOT WORK
+	sb.read("file1");
 	printContents(sb.get<0>());
 	printContents(sb.get<1>());
 	printContents(sb.get<2>());
