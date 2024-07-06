@@ -35,12 +35,12 @@ public:
 		std::get<column>(tuples[i]) = value;
 	}
 
-	constexpr size_t struct_num_elems() const
+	static constexpr size_t tuple_size()
 	{
 		return std::tuple_size_v<used_tuple>;
 	}
 
-	void save(const std::string& fname)
+	void save(const std::string& fname) const
 	{
 		std::ofstream file;
 		file.open(fname.c_str(), std::ios::binary | std::ios::out);
@@ -48,7 +48,7 @@ public:
 		for (auto& tuple : tuples)
 		{
 			call_elems_in_tuple(
-				[&file]<typename T>(T& elem) {
+				[&file]<typename T>(const T& elem) {
 					file.write(reinterpret_cast<const char*>(&elem), sizeof(T));
 				},
 				tuple);

@@ -67,5 +67,3 @@ struct get_size_until<Index, First, Rest...>
 // Helper alias
 template <size_t Index, typename... Types>
 using get_size_until_t = get_size_until<Index, Types...>;
-
-

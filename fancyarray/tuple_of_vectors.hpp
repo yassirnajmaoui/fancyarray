@@ -52,7 +52,7 @@ public:
 		std::get<row>(vectors)[i] = value;
 	}
 
-	constexpr size_t struct_num_elems() const
+	static constexpr size_t tuple_size()
 	{
 		return std::tuple_size_v<decltype(vectors)>;
 	}
@@ -99,7 +99,7 @@ public:
 		file.close();
 	}
 
-	void save_transpose(const std::string& fname)
+	void save_transpose(const std::string& fname) const
 	{
 		// Here, "row" and "column" have switched definitions
 		std::ofstream file;
@@ -111,10 +111,10 @@ public:
 		for (size_t row = 0; row < num_elems; row++)
 		{
 			call_elems_in_tuple(
-				[&file, row]<typename T>(std::vector<T>& v)
+				[&file, row]<typename T>(const std::vector<T>& v)
 				{
 					constexpr size_t readlength = sizeof(T);
-					file.write(reinterpret_cast<char*>(v.data() + row),
+					file.write(reinterpret_cast<const char*>(v.data() + row),
 							  readlength);
 				},
 				vectors);
@@ -165,13 +165,13 @@ public:
 		file.close();
 	}
 
-	void save(const std::string& fname)
+	void save(const std::string& fname) const
 	{
 		std::ofstream file;
 		file.open(fname.c_str(), std::ios::binary | std::ios::out);
 		checkFile(file);
 		call_elems_in_tuple(
-			[&file]<typename T>(std::vector<T>& v) {
+			[&file]<typename T>(const std::vector<T>& v) {
 				file.write(reinterpret_cast<const char*>(v.data()),
 						   v.size() * sizeof(T));
 			},
