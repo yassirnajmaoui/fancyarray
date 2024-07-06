@@ -29,3 +29,5 @@ static void call_elems_in_tuple(Functor func, std::tuple<GivenTypes...>& t)
 	std::make_index_sequence<N> a;
 	call_elems_in_tuple_i(func, t, a);
 }
+
+// TODO: Add const version

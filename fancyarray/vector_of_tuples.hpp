@@ -2,6 +2,7 @@
 
 #include "file_common.hpp"
 #include "tuple_common.hpp"
+#include "variadic_common.hpp"
 
 #include <vector>
 
@@ -25,14 +26,7 @@ public:
 
 	constexpr auto get_sizeof_struct()
 	{
-		size_t struct_size = 0ull;
-		if (tuples.empty())
-		{
-			tuples.push_back({});
-		}
-		call_elems_in_tuple([&struct_size]<typename T>(T&)
-							{ struct_size += sizeof(T); }, tuples.at(0));
-		return struct_size;
+		return get_total_sizeof_t<Types...>::FinalSum;
 	}
 
 	template <size_t column, typename T>

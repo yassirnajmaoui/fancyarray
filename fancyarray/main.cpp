@@ -67,4 +67,16 @@ int main(int, char**)
 	std::cout << "reading: " << t.get<0>(1) << "\n";
 	std::cout << "reading: " << t.get<3>(0) << "\n";
 	std::cout << "reading: " << t.get<0>(2) << "\n";
+
+	tuple_of_vectors<float, unsigned int, unsigned int> lm;
+	lm.read_transpose("/mnt/F49A51EF9A51AF3C/_CURR/EEE/GCRecon/data/test_MOUSE_recon/acq_001_point_source_static.lmDat");
+	const size_t num_events = lm.get_num_elems<0>();
+	for(size_t i=0; i<35;i++)
+	{
+		std::cout << "timestamp: " << lm.get<0>(i) << std::endl;
+		std::cout << "d1: " << lm.get<1>(i) << std::endl;
+		std::cout << "d2: " << lm.get<2>(i) << std::endl;
+	}
+	lm.save_transpose("/mnt/F49A51EF9A51AF3C/_CURR/EEE/GCRecon/data/test_MOUSE_recon/tmp.lmDat");
+
 }
