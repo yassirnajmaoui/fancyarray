@@ -11,16 +11,16 @@ class VectorOfStructs
 public:
 	auto& get() { return tuples; }
 
-	template <size_t row>
+	template <size_t column>
 	constexpr auto& get(size_t i)
 	{
-		return std::get<row>(tuples[i]);
+		return std::get<column>(tuples[i]);
 	}
 
-	template <size_t row>
+	template <size_t column>
 	constexpr auto get_sizeof() const
 	{
-		return sizeof(std::tuple_element<row, UsedTuple>);
+		return sizeof(std::tuple_element<column, UsedTuple>);
 	}
 
 	constexpr auto get_sizeof_struct()
@@ -35,10 +35,10 @@ public:
 		return struct_size;
 	}
 
-	template <size_t row, typename T>
+	template <size_t column, typename T>
 	constexpr void set(size_t i, T value)
 	{
-		std::get<row>(tuples[i]) = value;
+		std::get<column>(tuples[i]) = value;
 	}
 
 	constexpr size_t struct_num_elems() const
