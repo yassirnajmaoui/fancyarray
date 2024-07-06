@@ -1,12 +1,12 @@
 #pragma once
 
-#include "FileCommon.hpp"
-#include "TupleCommon.hpp"
+#include "file_common.hpp"
+#include "tuple_common.hpp"
 
 #include <vector>
 
 template <typename... Types>
-class VectorOfStructs
+class vector_of_tuples
 {
 public:
 	auto& get() { return tuples; }
@@ -20,7 +20,7 @@ public:
 	template <size_t column>
 	constexpr auto get_sizeof() const
 	{
-		return sizeof(std::tuple_element<column, UsedTuple>);
+		return sizeof(std::tuple_element<column, used_tuple>);
 	}
 
 	constexpr auto get_sizeof_struct()
@@ -43,7 +43,7 @@ public:
 
 	constexpr size_t struct_num_elems() const
 	{
-		return std::tuple_size_v<UsedTuple>;
+		return std::tuple_size_v<used_tuple>;
 	}
 
 	void save(const std::string& fname)
@@ -108,6 +108,6 @@ public:
 	}
 
 private:
-	using UsedTuple = std::tuple<Types...>;
-	std::vector<UsedTuple> tuples;
+	using used_tuple = std::tuple<Types...>;
+	std::vector<used_tuple> tuples;
 };

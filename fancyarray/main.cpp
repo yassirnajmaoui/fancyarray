@@ -1,6 +1,6 @@
-#include "StructOfVectors.hpp"
-#include "TrivialArrayOfStructs.hpp"
-#include "VectorOfStructs.hpp"
+#include "tuple_of_vectors.hpp"
+#include "trivial_array_of_structs.hpp"
+#include "vector_of_tuples.hpp"
 
 #include <iostream>
 
@@ -19,21 +19,20 @@ void printContents(V v)
 
 int main(int, char**)
 {
-
-	StructOfVectors<int, double, float> sa;
+	tuple_of_vectors<int, double, float> sa;
 	sa.get<0>() = {15, 24, 58, 69};
 	sa.get<1>() = {3.14159, 2.5, 9.5, 2.999};
 	sa.get<2>() = {99.14159, 202.5, 0.1, 0.859};
 	sa.save("file1");
 
-	StructOfVectors<int, double, float> sb;
+	tuple_of_vectors<int, double, float> sb;
 	sb.read("file1");
 	printContents(sb.get<0>());
 	printContents(sb.get<1>());
 	printContents(sb.get<2>());
 	std::cout << std::endl;
 
-	VectorOfStructs<int, double, float> va;
+	vector_of_tuples<int, double, float> va;
 	va.get().resize(5);
 	for (size_t i = 0; i < 5; i++)
 	{
@@ -43,11 +42,11 @@ int main(int, char**)
 	}
 	va.save("file2");
 
-	VectorOfStructs<float, unsigned int, unsigned int> vb;
+	vector_of_tuples<int, double, float> vb;
 	vb.read("file2");
 	std::cout << std::endl;
 
-	TrivialArrayOfStructs<int, double, unsigned char, unsigned long> s{3};
+	trivial_array_of_structs<int, double, unsigned char, unsigned long> s{3};
 	std::cout << "size of:" << decltype(s)::get_sizeof<1>() << std::endl;
 	std::cout << "total size of:" << decltype(s)::get_size_per_row()
 			  << std::endl;
@@ -60,7 +59,7 @@ int main(int, char**)
 
 	s.save("file1");
 
-	TrivialArrayOfStructs<int, double, unsigned char, unsigned long> t{
+	trivial_array_of_structs<int, double, unsigned char, unsigned long> t{
 		s.get_num_rows()};
 	t.read("file1");
 

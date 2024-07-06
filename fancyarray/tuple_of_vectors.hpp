@@ -1,13 +1,13 @@
 #pragma once
 
-#include "FileCommon.hpp"
-#include "TupleCommon.hpp"
+#include "file_common.hpp"
+#include "tuple_common.hpp"
 
 #include <cstring>
 #include <vector>
 
 template <typename... Types>
-class StructOfVectors
+class tuple_of_vectors
 {
 public:
 	template <size_t row>

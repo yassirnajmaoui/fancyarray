@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FileCommon.hpp"
+#include "file_common.hpp"
 
 #include <memory>
 
@@ -75,7 +75,7 @@ using get_size_until_t = get_size_until<Index, Types...>;
 
 // -------------------------------------
 template <typename... Types>
-class TrivialArrayOfStructs
+class trivial_array_of_structs
 {
 public:
 	static constexpr size_t get_num_columns() { return sizeof...(Types); }
@@ -97,7 +97,7 @@ public:
 		return get_size_until_t<column, Types...>::FinalSum;
 	}
 
-	explicit TrivialArrayOfStructs(const size_t p_num_rows) :
+	explicit trivial_array_of_structs(const size_t p_num_rows) :
 		num_rows(p_num_rows)
 	{
 		buffer = std::make_unique<char[]>(num_rows * get_size_per_row());
