@@ -12,32 +12,30 @@ class tuple_of_vectors
 {
 public:
 	template <size_t row>
-	constexpr auto& get()
-	{
-		return std::get<row>(vectors);
-	}
-
-	template <size_t row>
 	constexpr const auto& get() const
 	{
+		static_assert(row < tuple_size());
 		return std::get<row>(vectors);
 	}
 
 	template <size_t row>
 	constexpr auto get(size_t i) const
 	{
+		static_assert(row < tuple_size());
 		return std::get<row>(vectors)[i];
 	}
 
 	template <size_t row = 0>
 	size_t get_num_elems() const
 	{
+		static_assert(row < tuple_size());
 		return get<row>().size();
 	}
 
 	template <size_t row>
 	static constexpr auto get_sizeof()
 	{
+		static_assert(row < tuple_size());
 		return sizeof(get_nth_type_t<row, Types...>);
 	}
 
@@ -49,12 +47,19 @@ public:
 	template <size_t row, typename T>
 	constexpr void set(size_t i, T value)
 	{
+		static_assert(row < tuple_size());
 		std::get<row>(vectors)[i] = value;
 	}
 
 	static constexpr size_t tuple_size()
 	{
 		return std::tuple_size_v<decltype(vectors)>;
+	}
+
+	void resize(size_t new_size)
+	{
+		call_elems_in_tuple([new_size]<typename T>(std::vector<T>& v)
+							{ v.resize(new_size); }, vectors);
 	}
 
 	void read_transpose(const std::string& fname)
@@ -115,7 +120,7 @@ public:
 				{
 					constexpr size_t readlength = sizeof(T);
 					file.write(reinterpret_cast<const char*>(v.data() + row),
-							  readlength);
+							   readlength);
 				},
 				vectors);
 		}

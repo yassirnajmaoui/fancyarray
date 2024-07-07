@@ -15,12 +15,14 @@ public:
 	template <size_t column>
 	constexpr auto& get(size_t i)
 	{
+		static_assert(column < tuple_size());
 		return std::get<column>(tuples[i]);
 	}
 
 	template <size_t column>
 	constexpr auto get_sizeof() const
 	{
+		static_assert(column < tuple_size());
 		return sizeof(std::tuple_element<column, used_tuple>);
 	}
 
@@ -32,6 +34,7 @@ public:
 	template <size_t column, typename T>
 	constexpr void set(size_t i, T value)
 	{
+		static_assert(column < tuple_size());
 		std::get<column>(tuples[i]) = value;
 	}
 
@@ -39,6 +42,8 @@ public:
 	{
 		return std::tuple_size_v<used_tuple>;
 	}
+
+	void resize(size_t new_size) { tuples.resize(new_size); }
 
 	void save(const std::string& fname) const
 	{
