@@ -13,7 +13,7 @@ public:
 	auto& get() { return tuples; }
 
 	template <size_t column>
-	constexpr auto& get(size_t i)
+	constexpr auto& get(size_t i) const
 	{
 		static_assert(column < tuple_size());
 		return std::get<column>(tuples[i]);
@@ -26,7 +26,7 @@ public:
 		return sizeof(std::tuple_element<column, used_tuple>);
 	}
 
-	constexpr auto get_sizeof_struct()
+	static constexpr auto get_sizeof_struct()
 	{
 		return get_total_sizeof_t<Types...>::FinalSum;
 	}

@@ -11,6 +11,7 @@ template <typename... Types>
 class tuple_of_vectors
 {
 public:
+	// Return the vector at the row specified by template
 	template <size_t row>
 	constexpr const auto& get() const
 	{
@@ -18,20 +19,23 @@ public:
 		return std::get<row>(vectors);
 	}
 
+	// Return the ith element of the vector at the row specified by template
 	template <size_t row>
-	constexpr auto get(size_t i) const
+	constexpr const auto& get(size_t i) const
 	{
 		static_assert(row < tuple_size());
 		return std::get<row>(vectors)[i];
 	}
 
+	// Return the number of elements in the vector at the specified row
 	template <size_t row = 0>
-	size_t get_num_elems() const
+	constexpr size_t get_num_elems() const
 	{
 		static_assert(row < tuple_size());
 		return get<row>().size();
 	}
 
+	// Get the sizeof of the element at the specified row
 	template <size_t row>
 	static constexpr auto get_sizeof()
 	{
@@ -39,11 +43,14 @@ public:
 		return sizeof(get_nth_type_t<row, Types...>);
 	}
 
+	// Get the total sizeof of all the types.
+	// In other words, the sizeof of a column
 	static constexpr size_t get_sizeof_struct()
 	{
 		return get_total_sizeof_t<Types...>::FinalSum;
 	}
 
+	// Set the value of the ith element at the row specified by template
 	template <size_t row, typename T>
 	constexpr void set(size_t i, T value)
 	{
@@ -51,17 +58,20 @@ public:
 		std::get<row>(vectors)[i] = value;
 	}
 
+	// Get the number of types in the tuple
 	static constexpr size_t tuple_size()
 	{
 		return std::tuple_size_v<decltype(vectors)>;
 	}
 
+	// Set the size of all the vectors at the same time
 	void resize(size_t new_size)
 	{
 		call_elems_in_tuple([new_size]<typename T>(std::vector<T>& v)
 							{ v.resize(new_size); }, vectors);
 	}
 
+	// Read a file as an array of structures
 	void read_transpose(const std::string& fname)
 	{
 		// Here, "row" and "column" have switched definitions
@@ -104,6 +114,7 @@ public:
 		file.close();
 	}
 
+	// Save the structure as an array of structure
 	void save_transpose(const std::string& fname) const
 	{
 		// Here, "row" and "column" have switched definitions
@@ -127,6 +138,7 @@ public:
 		file.close();
 	}
 
+	// Read the data from a file
 	void read(const std::string& fname)
 	{
 		std::ifstream file;
@@ -170,6 +182,7 @@ public:
 		file.close();
 	}
 
+	// Save to a file
 	void save(const std::string& fname) const
 	{
 		std::ofstream file;
