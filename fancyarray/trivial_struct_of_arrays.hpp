@@ -93,45 +93,54 @@ public:
         file.close();
     }
 
-    void read_transpose(const std::string& fname)
+    void read_transpose(const std::string& fname, const size_t buffer_size_structures = 1024)
     {
         std::ifstream file(fname, std::ios::binary);
-        check_file(file);
+		check_file(file);
 
         constexpr size_t struct_size = get_size_per_col();
-        char struct_buffer[struct_size];
+        const size_t buffer_size = buffer_size_structures * struct_size;
+        const auto buffer = std::make_unique<char[]>(buffer_size);
 
-        for (size_t col = 0; col < num_columns; ++col)
+        size_t col = 0;
+        while (file.read(buffer.get(), buffer_size) || file.gcount() > 0)
         {
-            file.read(struct_buffer, struct_size);
-
-            size_t offset = 0;
-            transpose_helper<0>(struct_buffer, col, offset);
+            const size_t num_read_structures = file.gcount() / struct_size;
+            for (size_t i = 0; i < num_read_structures && col < num_columns; ++i, ++col)
+            {
+                size_t offset = 0;
+                transpose_helper<0>(buffer.get() + i * struct_size, col, offset);
+            }
         }
 
         file.close();
     }
 
-    void save_transpose(const std::string& fname) const
+    void save_transpose(const std::string& fname, const size_t buffer_size_structures = 1024) const
     {
         std::ofstream file(fname, std::ios::binary);
-        check_file(file);
+		check_file(file);
 
         constexpr size_t struct_size = get_size_per_col();
-        char struct_buffer[struct_size];
+        const size_t buffer_size = buffer_size_structures * struct_size;
+        const auto buffer = std::make_unique<char[]>(buffer_size);
 
-        // Iterate over each column (each structure in AoS)
-        for (size_t col = 0; col < num_columns; ++col)
+        size_t col = 0;
+        while (col < num_columns)
         {
-            size_t offset = 0;
-            assemble_structure<0>(struct_buffer, col, offset);
+            const size_t num_structures_in_buffer = std::min(buffer_size, num_columns - col);
+            for (size_t i = 0; i < num_structures_in_buffer; ++i, ++col)
+            {
+                size_t offset = 0;
+                assemble_structure<0>(buffer.get() + i * struct_size, col, offset);
+            }
 
-            // Write the entire structure (one row in AoS format) to the file
-            file.write(struct_buffer, struct_size);
+            file.write(buffer.get(), num_structures_in_buffer * struct_size);
         }
 
         file.close();
     }
+
 private:
     template <size_t row>
     void transpose_helper(const char* struct_buffer, const size_t col, size_t& offset)
