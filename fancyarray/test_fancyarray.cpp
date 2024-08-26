@@ -1,4 +1,5 @@
 #include "trivial_array_of_structs.hpp"
+#include "trivial_struct_of_arrays.hpp"
 #include "tuple_of_vectors.hpp"
 #include "vector_of_tuples.hpp"
 
@@ -7,8 +8,9 @@
 void assertion_failed(char const* expr, const long line)
 {
 	std::cerr << "Assertion failed: " << expr << "\n\tin line " << line
-			  << std::endl;
+		<< std::endl;
 }
+
 /* clang-format off */
 #define CHECK_LIKELY(x) __builtin_expect(x, 1)
 #define ASSERT(expr) (CHECK_LIKELY(!!(expr))? ((void)0): assertion_failed(#expr, __LINE__))
@@ -128,8 +130,8 @@ int main(int, char**)
 	for (size_t i = 0; i < num_events; i++)
 	{
 		tvc.set<0>(i, i);
-		tvc.set<1>(i, i*(i>>1));
-		tvc.set<2>(i, i*i);
+		tvc.set<1>(i, i * (i >> 1));
+		tvc.set<2>(i, i * i);
 		tvc.set<3>(i, i % 128);
 	}
 	tvc.save_transpose("file2");
@@ -144,4 +146,47 @@ int main(int, char**)
 		ASSERT(tvd.get<3>(i) == i % 128);
 	}
 
+
+	std::cout << "Testing Trivial Structure of Arrays..." << std::endl;
+	trivial_struct_of_arrays<int, double, unsigned char, unsigned long> aa{3};
+	ASSERT(decltype(aa)::get_sizeof<1>() == 8);
+	ASSERT(decltype(aa)::get_size_per_col() == (4+8+1+8));
+	ASSERT(decltype(aa)::get_size_until<2>() == (4+8));
+	ASSERT(decltype(aa)::get_size_until<0>() == 0);
+	aa.set<0>(0, 89);
+	aa.set<0>(1, -1800);
+	aa.set<0>(2, 0);
+	aa.set<1>(0, -0.1);
+	aa.set<1>(1, 5.2);
+	aa.set<1>(2, 8.4);
+	aa.set<2>(0, 0);
+	aa.set<2>(1, 255);
+	aa.set<2>(2, 128);
+	aa.set<3>(0, 65536);
+	aa.set<3>(1, 0);
+	aa.set<3>(2, 448945);
+	aa.save_transpose("file");
+
+	trivial_struct_of_arrays<int, double, unsigned char, unsigned long> ab{
+		sa.get_num_rows()};
+	ab.read_transpose("file");
+	ASSERT(ab.get<0>(0) == 89);
+	ASSERT(ab.get<0>(1) == -1800);
+	ASSERT(ab.get<0>(2) == 0);
+	ASSERT(ab.get<1>(0) == aa.get<1>(0));
+	ASSERT(ab.get<1>(1) == aa.get<1>(1));
+	ASSERT(ab.get<1>(2) == aa.get<1>(2));
+	ASSERT(ab.get<2>(0) == 0);
+	ASSERT(ab.get<2>(1) == 255);
+	ASSERT(ab.get<2>(2) == 128);
+	ASSERT(ab.get<3>(0) == 65536);
+	ASSERT(ab.get<3>(1) == 0);
+	ASSERT(ab.get<3>(2) == 448945);
+
+	ASSERT(ab.get_pointer<3>()[2] == aa.get<3>(2));
+
+
+	// Delete used files
+	std::remove("file");
+	std::remove("file2");
 }

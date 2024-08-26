@@ -77,7 +77,7 @@ public:
 		// Here, "row" and "column" have switched definitions
 		std::ifstream file;
 		file.open(fname.c_str(), std::ios::binary | std::ios::in);
-		checkFile(file);
+		check_file(file);
 		// This makes the assumption that all the vectors have the same size
 		constexpr size_t struct_size = get_sizeof_struct();
 		const auto begin = file.tellg();
@@ -120,7 +120,7 @@ public:
 		// Here, "row" and "column" have switched definitions
 		std::ofstream file;
 		file.open(fname.c_str(), std::ios::binary | std::ios::out);
-		checkFile(file);
+		check_file(file);
 		// This makes the assumption that all the vectors have the same size
 		const size_t num_elems = get_num_elems();
 
@@ -143,7 +143,7 @@ public:
 	{
 		std::ifstream file;
 		file.open(fname.c_str(), std::ios::binary | std::ios::in);
-		checkFile(file);
+		check_file(file);
 		// This makes the assumption that all the vectors have the same size
 		const size_t struct_size = get_sizeof_struct();
 		const auto begin = file.tellg();
@@ -187,7 +187,7 @@ public:
 	{
 		std::ofstream file;
 		file.open(fname.c_str(), std::ios::binary | std::ios::out);
-		checkFile(file);
+		check_file(file);
 		call_elems_in_tuple(
 			[&file]<typename T>(const std::vector<T>& v) {
 				file.write(reinterpret_cast<const char*>(v.data()),

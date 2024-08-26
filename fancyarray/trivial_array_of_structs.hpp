@@ -65,7 +65,7 @@ public:
 	{
 		std::ofstream file;
 		file.open(fname.c_str(), std::ios::binary | std::ios::out);
-		checkFile(file);
+		check_file(file);
 		file.write(buffer.get(), get_total_size());
 		file.close();
 	}
@@ -74,7 +74,7 @@ public:
 	{
 		std::ifstream file;
 		file.open(fname.c_str(), std::ios::binary | std::ios::in);
-		checkFile(file);
+		check_file(file);
 		file.read(buffer.get(), get_total_size());
 		file.close();
 	}

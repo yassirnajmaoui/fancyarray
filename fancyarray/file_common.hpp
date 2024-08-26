@@ -3,7 +3,7 @@
 #include <fstream>
 
 template <typename FileIOType>
-void checkFile(const FileIOType& file)
+void check_file(const FileIOType& file)
 {
 	if (!file.is_open())
 	{
