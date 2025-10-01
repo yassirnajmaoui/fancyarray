@@ -8,3 +8,5 @@ The various data structures in this project are:
 - `vector_of_tuples<T1, T2, ...>`, which internally stores a `std::vector<std::tuple<T1, T2, ...>>`
 
 Feel free to use this and modify it to your liking.
+
+The documentation is the code ;)
